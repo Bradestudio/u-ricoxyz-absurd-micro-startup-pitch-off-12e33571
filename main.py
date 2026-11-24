@@ -17,6 +17,13 @@ ENTRY = (
 
 
 def main():
+    # The sealed gate accepts 1-200 UTF-8 characters, one line, not only
+    # whitespace. Refuse to write anything that would fail it, instead of
+    # shipping a file the judge never sees.
+    if not 1 <= len(ENTRY) <= 200:
+        raise SystemExit("entry must be 1-200 characters, got %d" % len(ENTRY))
+    if "\n" in ENTRY or "\r" in ENTRY or not ENTRY.strip():
+        raise SystemExit("entry must be a single non-blank line")
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, "entry.txt")
